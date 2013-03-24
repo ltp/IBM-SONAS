@@ -6,7 +6,7 @@ use warnings;
 use IBM::StorageSystem;
 use Carp qw(croak);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our @METHODS=qw(health disk export filesystem interface mount node quota replication service snapshot task);
 # TO DO: lssnspshot lsrepl lsrepltask
