@@ -6,7 +6,7 @@ use warnings;
 use IBM::StorageSystem;
 use Carp qw(croak);
 
-our $VERSION = '0.02';
+our $VERSION = '0.021';
 
 our @METHODS=qw(health disk export filesystem interface mount node quota replication service snapshot task);
 # TO DO: lssnspshot lsrepl lsrepltask
@@ -56,19 +56,22 @@ IBM::SONAS is a Perl API to IBM SONAS CLI.
 	use IBM::SONAS;
 
 	# Create an IBM::SONAS object
-	my $ibm = IBM::SONAS->new(      user            => 'admin',
-					host            => 'my-sonas.company.com',
-					key_path        => '/path/to/my/.ssh/private_key'
+
+	my $ibm = IBM::SONAS->new(      
+				user     => 'admin',
+				host     => 'my-sonas.company.com',
+				key_path => '/path/to/my/.ssh/private_key'
 		) or die "Couldn't create object! $!\n";
 
 =head1 METHODS
 
-=head3 new 
+=head3 new ( %ARGS )
 
-        my $ibm = IBM::SONAS->new(      user            => 'admin',
-                                        host            => 'my-sonas.company.com',
-                                        key_path        => '/path/to/my/.ssh/private_key'
-                        ) or die "Couldn't create object! $!\n";
+	my $ibm = IBM::SONAS->new(      
+				user     => 'admin',
+				host     => 'my-sonas.company.com',
+				key_path => '/path/to/my/.ssh/private_key'
+		) or die "Couldn't create object! $!\n";
 
 Constructor - creates a new IBM::SONAS object.  This method accepts three mandatory parameters
 and one optional parameter, the three mandatory parameters are:
@@ -94,12 +97,15 @@ must have read permission to this key.
 =head3 disk ( $id ) 
 
         # Get the disk named "system_vol_00" as an IBM::StorageSystem::Disk object
+
         my $disk = $ibm->disk(system_vol_00);
         
         # Print the disk status
+
         print $disk->status;
 
         # Alternately
+
         print $ibm->disk(system_vol_00)->status;
 
 Returns a L<IBM::StorageSystem::Disk> object representing the disk specified by the value of the id parameter, 
@@ -116,9 +122,24 @@ This is a functionally equivalent non-caching implementation of the B<disk> meth
 
         # Print a listing of all disks in the target system including their name, the assigned pool and status
 
-        printf( "%-20s%-20s%-20s\n", "Name", "Pool", "Status" );
-        printf( "%-20s%-20s%-20s\n", "-----", "------", "-------" );
-        foreach my $disk ( $ibm->get_disks ) { printf( "%-20s%-20s%-20s\n", $disk->name, $disk->pool, $disk->status ) }
+        printf( "%-20s%-20s%-20s\n", 
+		"Name", 
+		"Pool", 
+		"Status" 
+	);
+        printf( "%-20s%-20s%-20s\n", 
+		"-----", 
+		"------", 
+		"-------" 
+	);
+
+        foreach my $disk ( $ibm->get_disks ) { 
+		printf( "%-20s%-20s%-20s\n", 
+			$disk->name, 
+			$disk->pool, 
+			$disk->status 
+		) 
+	}
 
         # Prints something like:
         #
@@ -136,23 +157,33 @@ Returns an array of L<IBM::StorageSystem::Disk> objects representing all disks i
         # Print a listing of all configured exports containing the export name, the export path,
         # the export protocol and the export status.
 
-        printf( "%-20s%-40s%-10s%-10s\n", 'Name', 'Path', 'Protocol', 'Active' );
+        printf( "%-20s%-40s%-10s%-10s\n", 
+		'Name', 
+		'Path', 
+		'Protocol', 
+		'Active' 
+	);
 
         foreach my $export ( $ibm->get_exports ) { 
-                print '-'x100,"\n";
-                printf( "%-20s%-40s%-10s%-10s\n", $export->name, $export->path, $export->protocol, $export->active )
+                print '-'x55,"\n";
+                printf( "%-20s%-20s%-10s%-10s\n", 
+			$export->name, 
+			$export->path, 
+			$export->protocol, 
+			$export->active 
+		)
         }
 
         # Prints something like:
         #
-        #Name                Path                                    Protocol  Active    
-        # ----------------------------------------------------------------------------------------------------
-        # homes_root          /ibm/fs1/homes                          NFS       true      
-        # ----------------------------------------------------------------------------------------------------
-        # shares_root         /ibm/fs1/shares                         NFS       true      
-        # ----------------------------------------------------------------------------------------------------
-        # test                /ibm/fs1/test                           CIFS      true      
-        # ----------------------------------------------------------------------------------------------------
+        #Name                Path                Protocol  Active    
+        # ------------------------------------------------------
+        # homes_root          /ibm/fs1/homes      NFS       true      
+        # ------------------------------------------------------
+        # shares_root         /ibm/fs1/shares     NFS       true      
+        # -------------------------------------------------------
+        # test                /ibm/fs1/test       CIFS      true      
+        # -------------------------------------------------------
         # ... etc.
 
 Returns all configured exports on the target system as an array of L<IBM::StorageSystem::Export> objects.
@@ -160,17 +191,22 @@ Returns all configured exports on the target system as an array of L<IBM::Storag
 =head3 filesystem( $filesystem_name )
 
         # Print the block size of file system 'fs1'
+
         print $ibm->filesystem(fs1)->block_size;
         
         # Get the file system 'fs2' as a IBM::StorageSystem::FileSystem object
+
         my $fs = $ibm->filesystem(fs2);
 
         # Print the mount point of this file system
+
         print "fs2 mount point: " . $fs->mount_point . "\n";
 
         # Call a function if inode usage on file system 'fs2' exceeds 90% of maximum allocation.
-        monitoring_alert( 'Inode allocation > 90% on '.$filesystem->device_name ) 
-                if ( ( ( $fs->inodes / $fs->max_inodes ) * 100 ) > 90 );
+        monitoring_alert( 
+		'Inode allocation > 90% on '.$filesystem->device_name 
+	) 
+        if ( ( ( $fs->inodes / $fs->max_inodes ) * 100 ) > 90 );
 
 Returns the file system specified by the value of the named parameter as a L<IBM::StorageSystem::FileSystem> object.
 
@@ -185,8 +221,8 @@ you require the file system information to be retrieved directly from the target
 =head3 get_filesystems
 
         # Do the same for all file systems
-        map { monitoring_alert( 'Inode allocation > 90% on '.$_->device_name )
-                if ( ( ( $fs->inodes / $fs->max_inodes ) * 100 ) > 90 ) } $ibm->get_filesystems;
+        map { monitoring_alert( 'Inode allocation > 90% on '.$_->device_name ) }
+	grep { ( ( ( $_->inodes / $_->max_inodes ) * 100 ) > 90 ) } $ibm->get_filesystems;
 
 Returns an array of L<IBM::StorageSystem:FileSystem> objects representing all configured file systems on the
 target system.
@@ -195,7 +231,7 @@ target system.
 
         # Simple one-liner to print the sensor status and value for any error conditions.
         map { print join ' -> ', ( $_->sensor, $_->value."\n" ) } 
-                grep { $_->status =~ /ERROR/ } $ibm->get_healths;
+        grep { $_->status =~ /ERROR/ } $ibm->get_healths;
 
         # e.g.
         # CLUSTER -> Alert found in component cluster
@@ -207,13 +243,19 @@ Returns an array of L<IBM::StorageSystem::Health> objects representative of all 
 =head3 interface ( $id )
 
         # Get interface ethX0 on management node mgmt001st001 as an IBM::StorageSystem::Interface object
+
+	my $interface = $ibm->node('mgmt001st001')->interface('ethX0');
+
         # Print the interface status
+
         print $interface->up_or_down;
 
         # Print the interface status
+
         print $interface->speed;
 
         # Alternately;
+
         print $ibm->interface('mgmt001st001:ethX0')->speed;
 
 Returns the interface identified by the value of the id parameter as an L<IBM::StorageSystem::Interface> object.
@@ -235,27 +277,34 @@ This is a functionally equivalent non-caching implementation of the B<interface>
                 print "Interface: " . $interface->interface . "\n";
                 print "\tStatus: " . $interface->up_or_down . "\n";
                 print "\tSpeed: " . $interface->speed . "\n";
-                print "\tRole: " . $interface->isubordinate_or_master . "\n----------\n";
+                print "\tRole: " . $interface->isubordinate_or_master 
+				 . "\n----------\n";
         }
         
-                 'node:interface' => 'mgmt002st001:ethXsl1_1',
-                 'MAC' => '00%3A90%3Afa%3A05%3A88%3A9e',
-                 'IPaddresses' => '',
-                 'MTU' => '1500',
-                 'up_or_down' => 'UP',
-                 'lsnwinterface' => 'lsnwinterface',
-                 'speed' => '10000',
-                 'master_or_subordinate' => 'SUBORDINATE',
-                 'transmit_hash_policy' => ''
+	# Prints somethign like
+	#
+	# Interface: ethX0
+	# 	Status: UP
+	#	Speed: 2000
+	#	Role: MASTER
+	# ----------
+	# Interface: ethXsl0_0
+	# 	Status: UP
+	#	Speed: 1000
+	#	Role: SLAVE
+	# ----------
+	# etc.
 
 Returns an array of L<IBM::StorageSystem::Interface> objects representing all interfaces on the target system.
 
 =head3 mount( $mount )
 
         # Print mount status of file system fs1
+
         print "Mount status: " . $ibm->mount(fs1) . "\n";
 
         # Print only those file system that aren’t mounted
+
         map { print $_->file_system . " is not mounted.\n" }
         grep { $_->mount_status ne ’mounted’ }
         $ibm->get_mounts;
@@ -276,13 +325,16 @@ This method returns an array of L<IBM::StorageSystem::Mount> objects representin
 =head3 node( $node )
 
         # Get node mgmt001st001 as an IBM::StorageSystem::Node object
+
         my $node = $ibm->node( mgmt001st001 );
         
         # Print the node description
+
         print "Description: " . $node->description . "\n";
 
         # Prints something like: "Description: active management node"
         # Or alternately;
+
         print "Description: " . $ibm->node( mgmt001st001 )->description . "\n";
 
 
@@ -298,8 +350,10 @@ This is a functionally equivalent non-caching implementation of the B<node> meth
 =head3 get_nodes
 
         # Print the GPFS and CTDB stati of all nodes
+
         foreach my $node ( $ibm->get_nodes ) {
-                print "GPFS status: " . $node->GPFS_status . " - CTDB status: " . $node->CTDB_status . "\n"
+                print "GPFS status: " . $node->GPFS_status 
+		      . " - CTDB status: " . $node->CTDB_status . "\n"
         }
 
 Returns an array of L<IBM::StorageSystem::Node> objects representing all configured nodes on the target system.
@@ -331,20 +385,15 @@ This is a functionally equivalent non-caching implementation of the B<replicatio
 
         use Date::Calc qw(date_to_Time Today_and_Now);
 
-        my $ibm = IBM::StorageSystem->new(      
-                                        user            => 'admin',
-                                        host            => 'my-v7000',
-                                        key_path        => '/path/to/my/.ssh/private_key'
-                                ) or die "Couldn't create object! $!\n";
-
         # Generate an alert for any replication errors in the last six hours
 
         foreach my $task ( $ibm->get_replications ) {
 
                 if ( $repl->status eq 'ERROR' and ( Date_to_Time( Today_and_Now ) 
-                        - ( Date_to_Time( split /-| |\./, $repl->time ) ) ) > 21_600 ) {
-                        alert( "Replication failure for filesystem " . $repl->filesystem . 
-                                " - log ID: " . $repl->log_id . )
+                     - ( Date_to_Time( split /-| |\./, $repl->time ) ) ) > 21_600 ) {
+                        alert( "Replication failure for filesystem " . $repl->filesystem 
+				. " - log ID: " . $repl->log_id . 
+			     )
                 }
 
         }
@@ -354,9 +403,11 @@ Returns all asynchornous replication tasks as an array of L<IBM::StorageSystem::
 =head3 service( $service )
 
         # Print the enabled status of the NFS service
+
         print $ibm->service(NFS)->enabled;
 
         # Print the configured and enabled status of all services
+
         printf( "%-20s%-20s%-20s\n", 'Service', 'Configured', 'Active' );
         map { printf( "%-20s%-20s%-20s\n", $_->name, $_->configured, $_->active ) } $ibm->get_services;
 
@@ -378,10 +429,12 @@ system.
 =head3 task( $task )
 
         # Print the status of the SNAPSHOTS task
+
         my $snapshots = $ibm->task(SNAPSHOTS);
         print "Status: " . $snapshots->status . "\n";
 
         # Alternately
+
         print "Status: " . $ibm->task(SNAPSHOTS)->status . "\n";
 
 Return the task identified by the value of the task parameter as an L<IBM::StorageSystem::Task> object.
@@ -396,6 +449,7 @@ This is a functionally equivalent non-caching implementation of the B<task> meth
 =head3 get_tasks
 
         # Call an alert function for any tasks that are not in an OK state
+
         map { alert( $_->name ) } grep { $_->status ne 'OK' } $ibm->get_tasks;
 
 Returns an array of L<IBM::StorageSystem::Task> objects representing all tasks on the target system.
