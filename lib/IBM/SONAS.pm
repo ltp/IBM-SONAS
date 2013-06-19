@@ -6,7 +6,7 @@ use warnings;
 use IBM::StorageSystem;
 use Carp qw(croak);
 
-our $VERSION = '0.021';
+our $VERSION = '0.022';
 
 our @METHODS=qw(health disk export filesystem interface mount node quota replication service snapshot task);
 # TO DO: lssnspshot lsrepl lsrepltask
@@ -303,7 +303,7 @@ Returns an array of L<IBM::StorageSystem::Interface> objects representing all in
 
         print "Mount status: " . $ibm->mount(fs1) . "\n";
 
-        # Print only those file system that aren’t mounted
+        # Print only those file system that are not mounted
 
         map { print $_->file_system . " is not mounted.\n" }
         grep { $_->mount_status ne ’mounted’ }
