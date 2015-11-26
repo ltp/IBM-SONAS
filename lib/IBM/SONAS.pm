@@ -570,10 +570,6 @@ L<http://search.cpan.org/dist/IBM-SONAS/>
 
 =back
 
-
-=head1 ACKNOWLEDGEMENTS
-
-
 =head1 LICENSE AND COPYRIGHT
 
 Copyright 2013 Luke Poskitt.
