@@ -462,6 +462,88 @@ method.
 Returns an array of [IBM::StorageSystem::Task](https://metacpan.org/pod/IBM::StorageSystem::Task) objects representing all tasks 
 on the target system.
 
+### cluster\_throughput ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterThroughput](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterThroughput) performance data on bytes read and written
+acorss all nodes and all GPFS filesystems in the cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+
+
+### cluster\_client\_throughput ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterClientThroughput](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterClientThroughput) performance data on client throughput across 
+all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+### cluster\_create\_delete\_latency ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterCreateDeleteLatency](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterCreateDeleteLatency) performance data on cluster file creation
+and deletion latency across all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+### cluster\_create\_delete\_operations ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterCreateDeleteOperations](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterCreateDeleteOperations) performance data on cluster file creation
+and deletion operations across all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+### cluster\_open\_close\_latency ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterOpenCloseLatency](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterOpenCloseLatency) performance data on cluster file open
+and close latency across all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+### cluster\_open\_close\_operations ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterCreateDeleteOperations](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterCreateDeleteOperations) performance data on cluster file open
+and close operations across all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+### cluster\_read\_write\_latency ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterReadWriteLatency](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterReadWriteLatency) performance data on cluster file read
+and write latency across all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
+### cluster\_read\_write\_operations ( $interval )
+
+Returns either a single, or list, of [IBM::StorageSystem::StatisticsSet](https://metacpan.org/pod/IBM::StorageSystem::StatisticsSet) objects containing 
+[IBM::StorageSystem::Statistics::ClusterReadWriteOperations](https://metacpan.org/pod/IBM::StorageSystem::Statistics::ClusterReadWriteOperations) performance data on cluster file read
+and write operations across all nodes in the target cluster.
+
+The method accepts a single optional parameter; the time period for which to return the data.
+The allowed values for this parameter are one of; minute, hour, day, week, month, quarter and year.
+If omitted, this parameter will default to minute.
+
 ## AUTHOR
 
 Luke Poskitt, `<ltp at cpan.org>`
@@ -499,7 +581,6 @@ You can also look for information at:
 - Search CPAN
 
     [http://search.cpan.org/dist/IBM-SONAS/](http://search.cpan.org/dist/IBM-SONAS/)
-
 
 ## LICENSE AND COPYRIGHT
 
